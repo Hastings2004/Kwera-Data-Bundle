@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kwera SC Data Bundle Bank</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --indigo: #1a0533;
+  --indigo-mid: #2d0f5e;
+  --violet: #4a1a8c;
+  --violet-light: #6b2fb5;
+  --crimson: #8b1a4a;
+  --crimson-light: #c0245e;
+  --royal: #1a2580;
+  --royal-light: #2a3db8;
+  --blue-purple: #3d1f7a;
+  --accent: #c084fc;
+  --accent-dim: rgba(192,132,252,0.15);
+  --accent-glow: rgba(192,132,252,0.3);
+  --red-accent: #f43f5e;
+  --green: #10b981;
+  --amber: #f59e0b;
+  --bg: #0f0a1e;
+  --surface: rgba(255,255,255,0.06);
+  --surface2: rgba(255,255,255,0.03);
+  --surface-solid: #1a1030;
+  --border: rgba(255,255,255,0.1);
+  --border-accent: rgba(192,132,252,0.3);
+  --text: #f0e8ff;
+  --muted: rgba(240,232,255,0.5);
+  --mono: 'JetBrains Mono', monospace;
+  --sans: 'Sora', sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:100vh}
+
+.kwera-bg {
+  position:fixed;inset:0;pointer-events:none;z-index:0;
+  display:flex;align-items:center;justify-content:center;overflow:hidden;
+}
+.kwera-bg span {
+  font-size:clamp(120px,22vw,280px);
+  font-weight:900;
+  font-family:var(--sans);
+  letter-spacing:-0.04em;
+  background: linear-gradient(135deg,
+    rgba(107,47,181,0.18) 0%,
+    rgba(139,26,74,0.14) 40%,
+    rgba(26,37,128,0.16) 70%,
+    rgba(192,132,252,0.1) 100%);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+  user-select:none;
+  white-space:nowrap;
+  transform:rotate(-8deg);
+}
+
+#login-screen {
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  position:relative;z-index:10;
+  background: linear-gradient(135deg,
+    #0d0620 0%,
+    #1a0533 25%,
+    #1a1560 50%,
+    #2d0f5e 75%,
+    #8b1a4a20 100%);
+}
+.login-card {
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(24px);
+  border: 1px solid rgba(192,132,252,0.2);
+  border-radius: 22px;
+  padding: 48px 44px;
+  width:100%;max-width:420px;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.6), 0 0 60px rgba(107,47,181,0.15);
+  position:relative;
+}
+.login-logo { text-align:center;margin-bottom:32px; }
+.login-logo .brand-icon {
+  width:64px;height:64px;
+  background: linear-gradient(135deg, var(--violet), var(--crimson));
+  border-radius:18px;
+  display:inline-flex;align-items:center;justify-content:center;
+  margin-bottom:14px;font-size:28px;
+  box-shadow: 0 8px 32px rgba(107,47,181,0.5);
+}
+.login-logo h1 { color:#fff;font-size:22px;font-weight:800;letter-spacing:-0.5px; }
+.login-logo h1 span { background:linear-gradient(90deg,var(--accent),#f9a8d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text; }
+.login-logo p { color:rgba(255,255,255,0.4);font-size:12px;margin-top:5px; }
+.login-field { margin-bottom:16px; }
+.login-field label { display:block;color:rgba(255,255,255,0.5);font-size:11px;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;margin-bottom:7px; }
+.login-field input {
+  width:100%;padding:13px 16px;
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:10px;color:#fff;font-size:14px;font-family:var(--sans);outline:none;
+  transition:border-color .2s,background .2s;
+}
+.login-field input::placeholder{color:rgba(255,255,255,0.2)}
+.login-field input:focus{border-color:var(--accent);background:rgba(192,132,252,0.06)}
+.login-err{color:#fca5a5;font-size:12px;margin-bottom:14px;display:none;padding:10px 14px;background:rgba(244,63,94,0.1);border:1px solid rgba(244,63,94,0.25);border-radius:8px;}
+.login-btn {
+  width:100%;padding:14px;
+  background: linear-gradient(135deg, var(--violet), var(--crimson));
+  border:none;border-radius:10px;color:#fff;font-size:14px;font-weight:700;
+  font-family:var(--sans);cursor:pointer;letter-spacing:0.3px;
+  transition:transform .15s,box-shadow .15s;margin-top:8px;
+  box-shadow: 0 4px 20px rgba(107,47,181,0.4);
+}
+.login-btn:hover{transform:translateY(-1px);box-shadow:0 8px 32px rgba(107,47,181,0.55)}
+.login-btn:active{transform:translateY(0)}
+.login-footer{text-align:center;margin-top:22px;color:rgba(255,255,255,0.2);font-size:11px;}
+
+#app{display:none;position:relative;z-index:1}
+.topnav {
+  background: linear-gradient(90deg, #0d0620 0%, #1a0a3d 50%, #1a1560 100%);
+  border-bottom:1px solid rgba(192,132,252,0.15);
+  padding:0 24px;display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:8px;height:58px;
+  position:sticky;top:0;z-index:100;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.5);
+}
+.nav-left{display:flex;align-items:center;gap:12px}
+.nav-brand-icon{width:32px;height:32px;background:linear-gradient(135deg,var(--violet),var(--crimson));border-radius:9px;display:inline-flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.topnav h1{color:#fff;font-size:14px;font-weight:700;letter-spacing:-0.2px}
+.topnav h1 span{background:linear-gradient(90deg,var(--accent),#f9a8d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.nav-right{display:flex;align-items:center;gap:10px}
+.nav-user{color:rgba(255,255,255,0.4);font-size:11px;font-family:var(--mono)}
+.tab-btns{display:flex;gap:4px}
+.tab-btn{background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.6);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:6px 14px;font-size:12px;font-weight:500;font-family:var(--sans);cursor:pointer;transition:all .15s}
+.tab-btn.active,.tab-btn:hover{background:linear-gradient(135deg,var(--violet),var(--crimson));color:#fff;border-color:transparent;box-shadow:0 4px 14px rgba(107,47,181,0.4)}
+.logout-btn{background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.4);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:5px 12px;font-size:11px;font-family:var(--sans);cursor:pointer;transition:all .15s}
+.logout-btn:hover{background:rgba(244,63,94,0.15);color:#fca5a5;border-color:rgba(244,63,94,0.3)}
+
+.view{display:none;padding:22px 24px;min-height:calc(100vh - 58px)}
+.view.active{display:block}
+
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;backdrop-filter:blur(10px)}
+.card h2{font-size:13px;font-weight:600;margin-bottom:16px;color:var(--text);letter-spacing:-0.1px}
+.form-row{margin-bottom:11px}
+.form-row label{display:block;font-size:11px;color:var(--muted);margin-bottom:5px;font-weight:500;letter-spacing:0.4px;text-transform:uppercase}
+.form-row input,.form-row select{
+  width:100%;padding:9px 12px;
+  border:1px solid var(--border);border-radius:8px;
+  background:rgba(255,255,255,0.05);color:var(--text);
+  font-size:13px;font-family:var(--sans);outline:none;transition:border-color .15s;
+}
+.form-row input::placeholder{color:var(--muted)}
+.form-row input:focus,.form-row select:focus{border-color:var(--accent)}
+.form-row select option{background:#1a1030;color:#f0e8ff}
+.btn{padding:8px 18px;border-radius:8px;font-size:12px;font-weight:500;font-family:var(--sans);cursor:pointer;border:1px solid var(--border);background:var(--surface);color:var(--text);transition:all .15s}
+.btn:hover{border-color:var(--accent);background:rgba(192,132,252,0.08)}
+.btn-primary{background:linear-gradient(135deg,var(--violet),var(--crimson));color:#fff;border:none;box-shadow:0 4px 14px rgba(107,47,181,0.3)}
+.btn-primary:hover{box-shadow:0 6px 20px rgba(107,47,181,0.5);transform:translateY(-1px)}
+.btn-danger{color:#fca5a5;border-color:rgba(244,63,94,0.3)}
+.btn-danger:hover{background:rgba(244,63,94,0.1)}
+.btn-sm{padding:4px 10px;font-size:11px}
+.save-msg{font-size:11px;color:var(--green);margin-left:8px;opacity:0;transition:opacity .3s}
+.save-msg.show{opacity:1}
+
+.admin-grid{display:grid;grid-template-columns:360px 1fr;gap:20px;align-items:start}
+@media(max-width:760px){.admin-grid{grid-template-columns:1fr}}
+.alumni-list{max-height:560px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(192,132,252,0.3) transparent}
+.alumni-item{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid var(--border);gap:8px;transition:background .12s}
+.alumni-item:last-child{border-bottom:none}
+.alumni-item:hover{background:rgba(192,132,252,0.05)}
+.alumni-name{font-size:13px;font-weight:500;color:var(--text)}
+.alumni-meta{font-size:11px;color:var(--muted);margin-top:2px}
+.status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.dot-confirmed{background:var(--green)}
+.dot-unconfirmed{background:rgba(240,232,255,0.3)}
+.item-actions{display:flex;gap:4px;flex-shrink:0}
+
+.dir-controls{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;align-items:center}
+.dir-controls input,.dir-controls select{
+  padding:9px 12px;border:1px solid var(--border);border-radius:8px;
+  background:var(--surface);color:var(--text);font-size:13px;font-family:var(--sans);outline:none;
+  backdrop-filter:blur(8px);transition:border-color .15s;
+}
+.dir-controls input::placeholder{color:var(--muted)}
+.dir-controls input:focus,.dir-controls select:focus{border-color:var(--accent)}
+.dir-controls select option{background:#1a1030}
+.dir-controls input{flex:1;min-width:160px}
+
+.stat-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 22px;min-width:130px;backdrop-filter:blur(8px)}
+.stat-card .slabel{font-size:10px;color:var(--muted);margin-bottom:4px;font-weight:500;letter-spacing:0.6px;text-transform:uppercase}
+.stat-card .sval{font-size:28px;font-weight:800;letter-spacing:-0.5px}
+.sval.total{background:linear-gradient(90deg,var(--accent),#f9a8d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.sval.conf{color:var(--green)}
+.sval.unconf{color:rgba(240,232,255,0.4)}
+
+.tbl-wrap{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow-x:auto;backdrop-filter:blur(10px)}
+table{width:100%;border-collapse:collapse;font-size:12px}
+thead th{padding:10px 14px;text-align:left;font-weight:600;background:rgba(255,255,255,0.04);color:var(--muted);border-bottom:1px solid var(--border);white-space:nowrap;font-size:11px;letter-spacing:0.4px;text-transform:uppercase}
+tbody tr{border-bottom:1px solid rgba(255,255,255,0.05);transition:background .1s}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:rgba(192,132,252,0.05)}
+tbody td{padding:10px 14px;vertical-align:middle}
+.badge{display:inline-block;border-radius:20px;padding:3px 10px;font-size:11px;font-weight:500;white-space:nowrap}
+.badge-confirmed{background:rgba(16,185,129,0.15);color:#6ee7b7;border:1px solid rgba(16,185,129,0.25)}
+.badge-unconfirmed{background:rgba(255,255,255,0.06);color:rgba(240,232,255,0.45);border:1px solid rgba(255,255,255,0.1)}
+.badge-cohort{background:rgba(192,132,252,0.12);color:var(--accent);border:1px solid rgba(192,132,252,0.2)}
+.no-res{padding:28px;text-align:center;color:var(--muted);font-size:13px}
+
+.info-bar{background:rgba(192,132,252,0.07);border:1px solid rgba(192,132,252,0.15);border-radius:10px;padding:10px 16px;display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.info-bar span{font-size:12px;color:var(--muted);flex:1}
+
+/* IMPORT/EXPORT SECTION */
+.ie-section{display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.file-input{display:none}
+.import-btn,.export-btn{padding:10px 16px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--text);font-size:12px;font-weight:500;font-family:var(--sans);cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:8px}
+.import-btn:hover,.export-btn:hover{border-color:var(--accent);background:rgba(192,132,252,0.08)}
+.export-btn{background:linear-gradient(135deg,var(--violet),var(--crimson));color:#fff;border:none}
+.export-btn:hover{box-shadow:0 4px 14px rgba(107,47,181,0.4)}
+
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:200;align-items:center;justify-content:center}
+.modal.show{display:flex}
+.modal-content{background:var(--surface-solid);border:1px solid var(--border);border-radius:14px;padding:24px;max-width:500px;width:90%;max-height:80vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.8)}
+.modal h3{font-size:16px;font-weight:700;margin-bottom:16px;color:#fff}
+.modal-msg{font-size:13px;color:var(--muted);margin-bottom:14px;line-height:1.5}
+.modal-actions{display:flex;gap:10px;margin-top:20px}
+.modal-actions .btn{flex:1}
+</style>
+</head>
+<body>
+
+<div class="kwera-bg"><span>KWERA</span></div>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="brand-icon">🏦</div>
+      <h1>Kwera SC <span>Data Bundle Bank</span></h1>
+      <p>Management System</p>
+    </div>
+    <div class="login-field">
+      <label>Email Address</label>
+      <input type="email" id="login-email" placeholder="your@email.com">
+    </div>
+    <div class="login-field">
+      <label>Password</label>
+      <input type="password" id="login-pass" placeholder="Enter password" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <div class="login-err" id="login-err">Invalid email or password. Please try again.</div>
+    <button class="login-btn" onclick="doLogin()">Sign In →</button>
+    <div class="login-footer">Kwera SC · Secure Access · Data Management</div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <div class="topnav">
+    <div class="nav-left">
+      <div class="nav-brand-icon">🏦</div>
+      <h1>Kwera SC <span>Data Bundle Bank</span></h1>
+    </div>
+    <div class="nav-right">
+      <div class="tab-btns">
+        <button class="tab-btn active" onclick="switchTab('admin')">Admin Panel</button>
+        <button class="tab-btn" onclick="switchTab('directory')">Directory View</button>
+      </div>
+      <span class="nav-user" id="nav-user-label"></span>
+      <button class="logout-btn" onclick="doLogout()">Sign out</button>
+    </div>
+  </div>
+
+  <!-- ADMIN VIEW -->
+  <div class="view active" id="view-admin">
+    <div class="admin-grid">
+      <div>
+        <div class="card" id="form-card">
+          <h2 id="form-title">Add new record</h2>
+          <div class="form-row"><label>Full name *</label><input id="f-name" placeholder="e.g. Ellen Mwenewiwa"></div>
+          <div class="form-row"><label>Personal number</label><input id="f-phone" placeholder="e.g. 0993723751" type="tel"></div>
+          <div class="form-row"><label>MIFI number</label><input id="f-mifi" placeholder="e.g. 0884567890" type="tel"></div>
+          <div class="form-row"><label>University *</label><input id="f-uni" placeholder="e.g. University of Malawi"></div>
+          <div class="form-row"><label>Cohort</label>
+            <select id="f-cohort">
+              <option value="">— Select cohort —</option>
+              <option>Cohort 1</option><option>Cohort 2</option><option>Cohort 3</option>
+              <option>Cohort 4</option><option>Cohort 5</option><option>Cohort 6</option>
+              <option>Cohort 7</option><option>Cohort 8</option>
+            </select>
+          </div>
+          <div class="form-row"><label>Employment category *</label>
+            <select id="f-status">
+              <option value="">— Select category —</option>
+              <option value="employed">Employed (Full-time)</option>
+              <option value="employed">Employed (Part-time)</option>
+              <option value="employed">Temporary work</option>
+              <option value="internship">Internship</option>
+              <option value="business">Business/Self-employment</option>
+              <option value="business">Searching/Business</option>
+            </select>
+          </div>
+          <div class="form-row"><label>Confirmation status</label>
+            <select id="f-confirmed">
+              <option value="unconfirmed">Unconfirmed</option>
+              <option value="confirmed">Confirmed</option>
+            </select>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;margin-top:18px">
+            <button class="btn btn-primary" onclick="saveAlumni()">Save</button>
+            <button class="btn" onclick="clearForm()" id="cancel-btn" style="display:none">Cancel</button>
+            <span class="save-msg" id="save-msg">✓ Saved!</span>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="card">
+          <h2>Import / Export Data</h2>
+          <div class="ie-section">
+            <button class="export-btn" onclick="exportToExcel()">📥 Export to Excel</button>
+            <button class="import-btn" onclick="document.getElementById('file-input').click()">📤 Import from Excel</button>
+            <input type="file" id="file-input" class="file-input" accept=".xlsx,.xls,.csv" onchange="importFromExcel(event)">
+          </div>
+          <div style="font-size:11px;color:var(--muted);line-height:1.6">
+            <p><strong>Export:</strong> Download all records as Excel file</p>
+            <p style="margin-top:8px"><strong>Import:</strong> Upload Excel file with columns: Name, Phone, MIFI, University, Cohort, Employment Status, Confirmation Status</p>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:16px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px">
+            <h2 style="margin:0">All Records (<span id="total-admin">0</span>)</h2>
+            <input placeholder="Search..." oninput="renderAdminList(this.value)"
+              style="padding:7px 11px;border:1px solid var(--border);border-radius:8px;font-size:12px;width:160px;
+              background:rgba(255,255,255,0.05);color:var(--text);font-family:var(--sans);outline:none;">
+          </div>
+          <div class="alumni-list" id="admin-list"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DIRECTORY VIEW -->
+  <div class="view" id="view-directory">
+    <div class="info-bar">
+      <span>Browse the data directory. Records can check and confirm their personal details below.</span>
+    </div>
+    <div class="dir-controls">
+      <input type="text" id="dir-search" placeholder="Search by name, university or cohort..." oninput="renderDirectory()">
+      <select id="dir-cohort" onchange="renderDirectory()"><option value="">All cohorts</option></select>
+      <select id="dir-conf" onchange="renderDirectory()">
+        <option value="">All statuses</option>
+        <option value="confirmed">Confirmed</option>
+        <option value="unconfirmed">Unconfirmed</option>
+      </select>
+    </div>
+    <div class="stat-row">
+      <div class="stat-card"><div class="slabel">Total Records</div><div class="sval total" id="d-total">0</div></div>
+      <div class="stat-card"><div class="slabel">Confirmed</div><div class="sval conf" id="d-conf">0</div></div>
+      <div class="stat-card"><div class="slabel">Unconfirmed</div><div class="sval unconf" id="d-unconf">0</div></div>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Personal No.</th>
+            <th>MIFI No.</th>
+            <th>University</th>
+            <th>Cohort</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="dir-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- IMPORT RESULT MODAL -->
+<div class="modal" id="import-modal">
+  <div class="modal-content">
+    <h3>Import Results</h3>
+    <div class="modal-msg" id="import-msg"></div>
+    <div class="modal-actions">
+      <button class="btn btn-primary" onclick="closeImportModal()">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- XLSX LIBRARY -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.min.js"></script>
+
+<script>
+const ADMIN_EMAIL = 'siphoc4chinyamula@gmail.com';
+const ADMIN_PASS  = 'user admin';
+
+function doLogin(){
+  const email=document.getElementById('login-email').value.trim();
+  const pass=document.getElementById('login-pass').value;
+  const err=document.getElementById('login-err');
+  if(email===ADMIN_EMAIL&&pass===ADMIN_PASS){
+    err.style.display='none';
+    document.getElementById('login-screen').style.display='none';
+    document.getElementById('app').style.display='block';
+    document.getElementById('nav-user-label').textContent=email;
+    renderAdminList('');
+  } else { err.style.display='block'; }
+}
+
+function doLogout(){
+  document.getElementById('app').style.display='none';
+  document.getElementById('login-screen').style.display='flex';
+  document.getElementById('login-pass').value='';
+}
+
+const STORE_KEY='kwera_sc_v2';
+let editingId=null;
+
+const SEED=[
+  {id:1,name:"Morris Matola M'baya",phone:"993723751",mifi:"",university:"University of Malawi",cohort:"Cohort 5",cat:"employed",status:"Employed (Full-time)",confirmed:"unconfirmed"},
+  {id:2,name:"Ellen Mziya Mwafulirwa",phone:"888548636",mifi:"",university:"Lilongwe University of Agriculture and Natural Resources",cohort:"Cohort 3",cat:"employed",status:"Employed (Full-time)",confirmed:"unconfirmed"},
+  {id:3,name:"Violla Chilemba",phone:"993748282",mifi:"",university:"Malawi University of Science and Technology",cohort:"Cohort 1",cat:"employed",status:"Employed (Full-time)",confirmed:"unconfirmed"}
+];
+
+function loadData(){try{const r=localStorage.getItem(STORE_KEY);if(r)return JSON.parse(r);}catch(e){}saveData(SEED);return SEED.map(x=>({...x}));}
+function saveData(arr){try{localStorage.setItem(STORE_KEY,JSON.stringify(arr));}catch(e){}}
+function getData(){return loadData();}
+function nextId(){const d=getData();return d.length?Math.max(...d.map(x=>x.id))+1:1;}
+function esc(s){if(!s)return'';return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+function switchTab(t){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('view-'+t).classList.add('active');
+  document.querySelectorAll('.tab-btn')[t==='admin'?0:1].classList.add('active');
+  if(t==='directory'){populateDirCohorts();renderDirectory();}
+  if(t==='admin'){renderAdminList('');}
+}
+
+function clearForm(){
+  editingId=null;
+  ['f-name','f-phone','f-mifi','f-uni'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('f-cohort').value='';
+  document.getElementById('f-status').value='';
+  document.getElementById('f-confirmed').value='unconfirmed';
+  document.getElementById('form-title').textContent='Add new record';
+  document.getElementById('cancel-btn').style.display='none';
+}
+
+function saveAlumni(){
+  const name=document.getElementById('f-name').value.trim();
+  const uni=document.getElementById('f-uni').value.trim();
+  const statusSel=document.getElementById('f-status');
+  const statusLabel=statusSel.options[statusSel.selectedIndex]?.text||'';
+  const cat=statusSel.value;
+  if(!name||!uni||!cat){alert('Please fill in name, university, and employment category.');return;}
+  const entry={
+    id:editingId||nextId(),
+    name,
+    phone:document.getElementById('f-phone').value.trim(),
+    mifi:document.getElementById('f-mifi').value.trim(),
+    university:uni,
+    cohort:document.getElementById('f-cohort').value,
+    cat,status:statusLabel,
+    confirmed:document.getElementById('f-confirmed').value
+  };
+  let data=getData();
+  if(editingId){data=data.map(x=>x.id===editingId?entry:x);}
+  else{data.push(entry);}
+  saveData(data);
+  const msg=document.getElementById('save-msg');
+  msg.classList.add('show');
+  setTimeout(()=>msg.classList.remove('show'),2000);
+  clearForm();renderAdminList('');
+}
+
+function editAlumni(id){
+  const d=getData().find(x=>x.id===id);if(!d)return;
+  editingId=id;
+  document.getElementById('f-name').value=d.name;
+  document.getElementById('f-phone').value=d.phone||'';
+  document.getElementById('f-mifi').value=d.mifi||'';
+  document.getElementById('f-uni').value=d.university;
+  document.getElementById('f-cohort').value=d.cohort||'';
+  document.getElementById('f-confirmed').value=d.confirmed||'unconfirmed';
+  const sel=document.getElementById('f-status');
+  for(let i=0;i<sel.options.length;i++){
+    if(sel.options[i].text===d.status){sel.selectedIndex=i;break;}
+    else if(sel.options[i].value===d.cat){sel.selectedIndex=i;}
+  }
+  document.getElementById('form-title').textContent='Edit record';
+  document.getElementById('cancel-btn').style.display='inline-block';
+  document.getElementById('f-name').focus();
+  document.getElementById('form-card').scrollIntoView({behavior:'smooth'});
+}
+
+function deleteAlumni(id){
+  if(!confirm('Delete this record?'))return;
+  saveData(getData().filter(x=>x.id!==id));
+  if(editingId===id)clearForm();
+  renderAdminList('');
+}
+
+function renderAdminList(q=''){
+  const data=getData();
+  const filtered=q?data.filter(x=>x.name.toLowerCase().includes(q.toLowerCase())||x.university.toLowerCase().includes(q.toLowerCase())):data;
+  document.getElementById('total-admin').textContent=data.length;
+  const el=document.getElementById('admin-list');
+  if(!filtered.length){el.innerHTML='<div style="padding:20px;text-align:center;font-size:13px;color:var(--muted)">No records found.</div>';return;}
+  el.innerHTML=filtered.map(x=>`
+    <div class="alumni-item">
+      <div class="status-dot dot-${x.confirmed||'unconfirmed'}"></div>
+      <div style="flex:1;min-width:0">
+        <div class="alumni-name">${esc(x.name)}</div>
+        <div class="alumni-meta">${esc(x.university)} · ${x.cohort||'—'} · <em>${x.confirmed==='confirmed'?'Confirmed':'Unconfirmed'}</em></div>
+      </div>
+      <div class="item-actions">
+        <button class="btn btn-sm" onclick="editAlumni(${x.id})">Edit</button>
+        <button class="btn btn-sm btn-danger" onclick="deleteAlumni(${x.id})">Del</button>
+      </div>
+    </div>`).join('');
+}
+
+function exportToExcel(){
+  const data=getData();
+  if(!data.length){alert('No records to export');return;}
+  
+  const exportData=data.map(x=>({
+    'Name':x.name,
+    'Phone':x.phone||'',
+    'MIFI':x.mifi||'',
+    'University':x.university,
+    'Cohort':x.cohort||'',
+    'Employment Status':x.status||'',
+    'Confirmation Status':x.confirmed||'unconfirmed'
+  }));
+  
+  const ws=XLSX.utils.json_to_sheet(exportData);
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,'Records');
+  XLSX.writeFile(wb,`Kwera_SC_Data_${new Date().toISOString().split('T')[0]}.xlsx`);
+}
+
+function importFromExcel(event){
+  const file=event.target.files[0];
+  if(!file)return;
+  
+  const reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      const data=new Uint8Array(e.target.result);
+      const workbook=XLSX.read(data,{type:'array'});
+      const sheet=workbook.Sheets[workbook.SheetNames[0]];
+      const rows=XLSX.utils.sheet_to_json(sheet);
+      
+      if(!rows.length){showImportResult('No data found in file');return;}
+      
+      let currentData=getData();
+      let added=0,updated=0,errors=[];
+      
+      rows.forEach((row,idx)=>{
+        try{
+          const name=(row.Name||row.name||'').trim();
+          const uni=(row.University||row.university||'').trim();
+          if(!name||!uni){errors.push(`Row ${idx+2}: Missing name or university`);return;}
+          
+          const entry={
+            id:nextId(),
+            name,
+            phone:(row.Phone||row.phone||'').trim(),
+            mifi:(row.MIFI||row.mifi||'').trim(),
+            university:uni,
+            cohort:(row.Cohort||row.cohort||'').trim(),
+            cat:'employed',
+            status:(row['Employment Status']||row['employment status']||'Employed (Full-time)').trim(),
+            confirmed:(row['Confirmation Status']||row['confirmation status']||'unconfirmed').trim()
+          };
+          
+          currentData.push(entry);
+          added++;
+        }catch(err){
+          errors.push(`Row ${idx+2}: ${err.message}`);
+        }
+      });
+      
+      saveData(currentData);
+      renderAdminList('');
+      
+      let msg=`✓ Import Complete\n\n📊 Added: ${added} records`;
+      if(errors.length)msg+=`\n\n⚠️ Errors (${errors.length}):\n${errors.slice(0,5).join('\n')}${errors.length>5?'\n...and more':''}`;
+      showImportResult(msg);
+    }catch(err){
+      showImportResult(`❌ Error reading file: ${err.message}`);
+    }
+  };
+  reader.readAsArrayBuffer(file);
+  document.getElementById('file-input').value='';
+}
+
+function showImportResult(msg){
+  document.getElementById('import-msg').innerText=msg;
+  document.getElementById('import-modal').classList.add('show');
+}
+
+function closeImportModal(){
+  document.getElementById('import-modal').classList.remove('show');
+}
+
+function populateDirCohorts(){
+  const data=getData();
+  const cohorts=[...new Set(data.map(x=>x.cohort).filter(Boolean))].sort();
+  const sel=document.getElementById('dir-cohort');
+  sel.innerHTML='<option value="">All cohorts</option>'+cohorts.map(c=>`<option>${c}</option>`).join('');
+}
+
+function confirmStudent(id){
+  let data=getData();
+  data=data.map(x=>x.id===id?{...x,confirmed:'confirmed'}:x);
+  saveData(data);
+  renderDirectory();
+}
+
+function renderDirectory(){
+  const data=getData();
+  const q=document.getElementById('dir-search').value.toLowerCase();
+  const cohort=document.getElementById('dir-cohort').value;
+  const confF=document.getElementById('dir-conf').value;
+
+  const filtered=data.filter(x=>{
+    const mq=!q||x.name.toLowerCase().includes(q)||(x.university||'').toLowerCase().includes(q)||(x.cohort||'').toLowerCase().includes(q)||(x.phone||'').includes(q);
+    const mc=!cohort||x.cohort===cohort;
+    const mconf=!confF||x.confirmed===confF;
+    return mq&&mc&&mconf;
+  });
+
+  const confCount=filtered.filter(x=>x.confirmed==='confirmed').length;
+  const unconfCount=filtered.filter(x=>x.confirmed!=='confirmed').length;
+
+  document.getElementById('d-total').textContent=filtered.length;
+  document.getElementById('d-conf').textContent=confCount;
+  document.getElementById('d-unconf').textContent=unconfCount;
+
+  const tbody=document.getElementById('dir-tbody');
+  if(!filtered.length){
+    tbody.innerHTML='<tr><td colspan="8" class="no-res">No records match your filters.</td></tr>';
+    return;
+  }
+  tbody.innerHTML=filtered.map((r,i)=>`
+    <tr>
+      <td style="color:var(--muted);font-size:11px">${i+1}</td>
+      <td style="font-weight:500;color:var(--text)">${esc(r.name)}</td>
+      <td style="font-family:var(--mono);color:var(--accent);font-size:12px">${r.phone||'<span style="color:var(--border)">—</span>'}</td>
+      <td style="font-family:var(--mono);color:rgba(192,132,252,0.6);font-size:12px">${r.mifi||'<span style="color:var(--border)">—</span>'}</td>
+      <td style="color:var(--muted);max-width:200px;font-size:12px">${esc(r.university)}</td>
+      <td>${r.cohort?`<span class="badge badge-cohort">${r.cohort}</span>`:'<span style="color:var(--border)">—</span>'}</td>
+      <td><span class="badge badge-${r.confirmed||'unconfirmed'}">${r.confirmed==='confirmed'?'Confirmed':'Unconfirmed'}</span></td>
+      <td>${r.confirmed==='confirmed'
+        ?'<span style="color:var(--muted);font-size:11px">✓ Details confirmed</span>'
+        :`<button class="btn btn-sm btn-primary" onclick="confirmStudent(${r.id})">Confirm my details</button>`
+      }</td>
+    </tr>`).join('');
+}
+</script>
+</body>
+</html>
